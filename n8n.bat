@@ -2,35 +2,35 @@
 setlocal enabledelayedexpansion
 
 :: ================================================
-:: n8n.bat ¡X ¥»¦a n8n ªA°È ºŞ²z¸}¥»
+:: n8n.bat â€” æœ¬åœ° n8n æœå‹™ ç®¡ç†è…³æœ¬
 :: ================================================
 
-:: µøµ¡¼ĞÃD»P°t¦â
-title n8n ¥»¦a ªA°È ºŞ²z ¤¶­±
+:: è¦–çª—æ¨™é¡Œèˆ‡é…è‰²
+title n8n æœ¬åœ° æœå‹™ ç®¡ç† ä»‹é¢
 color 07
 
-:: ¤u§@¥Ø¿ı¡]¥i¦Û¦æ½Õ¾ã¡^
+:: å·¥ä½œç›®éŒ„ï¼ˆå¯è‡ªè¡Œèª¿æ•´ï¼‰
 set "WORKDIR=%USERPROFILE%\n8n"
 
 :: ==================================================================
-:: 1. Àô¹Ò»P Docker ÀË¬d
+:: 1. ç’°å¢ƒèˆ‡ Docker æª¢æŸ¥
 :: ==================================================================
-echo [ÀË¬d] ¥¿¦bÀË¬d Docker ªA°Èª¬ºA...
+echo [æª¢æŸ¥] æ­£åœ¨æª¢æŸ¥ Docker æœå‹™ç‹€æ…‹...
 docker info >nul 2>&1
 if %errorlevel% equ 0 (
-    echo [¦¨¥\] Docker ¤w¦b¹B§@¤¤¡C
+    echo [æˆåŠŸ] Docker å·²åœ¨é‹ä½œä¸­ã€‚
 ) else (
-    echo [´£¥Ü] Docker ©|¥¼±Ò°Ê¡A¥¿¦b¹Á¸Õ±Ò°Ê Docker Desktop...
+    echo [æç¤º] Docker å°šæœªå•Ÿå‹•ï¼Œæ­£åœ¨å˜—è©¦å•Ÿå‹• Docker Desktop...
     docker --version >nul 2>&1
     if errorlevel 1 (
         echo.
-        echo [¿ù»~] ¥¼°»´ú¨ì Docker Desktop¡A§Y±N¶}±Ò¤U¸ü­¶­±...
+        echo [éŒ¯èª¤] æœªåµæ¸¬åˆ° Docker Desktopï¼Œå³å°‡é–‹å•Ÿä¸‹è¼‰é é¢...
         start "" "https://desktop.docker.com/win/main/amd64/Docker%%20Desktop%%20Installer.exe?utm_source=docker&utm_medium=webreferral&utm_campaign=dd-smartbutton&utm_location=module"
         pause
         goto END
     )
     start "" "%ProgramFiles%\Docker\Docker\Docker Desktop.exe"
-    echo ¥¿¦bªì©l¤Æ Docker Desktop¡A½Ğµy­Ô...
+    echo æ­£åœ¨åˆå§‹åŒ– Docker Desktopï¼Œè«‹ç¨å€™...
     timeout /t 5 >nul
     set "MAX_RETRIES=3"
     set "RETRY_COUNT=0"
@@ -39,57 +39,57 @@ if %errorlevel% equ 0 (
     if errorlevel 1 (
         set /a RETRY_COUNT+=1
         if !RETRY_COUNT! GEQ !MAX_RETRIES! (
-            echo [¿ù»~] Docker Desktop ±Ò°Ê¥¢±Ñ¡A½Ğ¤â°Ê¶}±Ò¨Ã½T»{¨ä¥¿±`¹B§@¡C
+            echo [éŒ¯èª¤] Docker Desktop å•Ÿå‹•å¤±æ•—ï¼Œè«‹æ‰‹å‹•é–‹å•Ÿä¸¦ç¢ºèªå…¶æ­£å¸¸é‹ä½œã€‚
             pause
             goto END
         )
-        echo Docker ©|¥¼´Nºü¡Aµ¥«İ 3 ¬í«á­«¸Õ¡]²Ä !RETRY_COUNT! ¦¸¡^...
+        echo Docker å°šæœªå°±ç·’ï¼Œç­‰å¾… 3 ç§’å¾Œé‡è©¦ï¼ˆç¬¬ !RETRY_COUNT! æ¬¡ï¼‰...
         timeout /t 3 >nul
         goto wait_docker
     )
-    echo [¦¨¥\] Docker ¤w¦¨¥\±Ò°Ê¡I
+    echo [æˆåŠŸ] Docker å·²æˆåŠŸå•Ÿå‹•ï¼
 )
 
 :: ==================================================================
-:: 2. ªì©l¤Æ»P­º¦¸±Ò°Ê
+:: 2. åˆå§‹åŒ–èˆ‡é¦–æ¬¡å•Ÿå‹•
 :: ==================================================================
 if not exist "%WORKDIR%" (
-    echo «Ø¥ß¤u§@¥Ø¿ı¡G%WORKDIR%
+    echo å»ºç«‹å·¥ä½œç›®éŒ„ï¼š%WORKDIR%
     mkdir "%WORKDIR%"
 )
 cd /d "%WORKDIR%"
 call :create_compose_if_needed
 
-:: ÀË¬dªA°È¬O§_¤w¦b¹B¦æ
+:: æª¢æŸ¥æœå‹™æ˜¯å¦å·²åœ¨é‹è¡Œ
 echo.
-echo [ÀË¬d] ¥¿¦bÀË¬d n8n ªA°Èª¬ºA...
+echo [æª¢æŸ¥] æ­£åœ¨æª¢æŸ¥ n8n æœå‹™ç‹€æ…‹...
 curl -s --fail http://localhost:5678 >nul 2>&1
 if %errorlevel% equ 0 (
-    echo [´£¥Ü] n8n ªA°È¤w¦b¹B¦æ¤¤¡C
-    echo [´£¥Ü] ¥i³z¹L¿ï³æ¶i¦æºŞ²z¾Ş§@¡C
+    echo [æç¤º] n8n æœå‹™å·²åœ¨é‹è¡Œä¸­ã€‚
+    echo [æç¤º] å¯é€éé¸å–®é€²è¡Œç®¡ç†æ“ä½œã€‚
 ) else (
-    echo [´£¥Ü] n8n ªA°È©|¥¼±Ò°Ê¡A¥¿¦b±Ò°ÊªA°È...
+    echo [æç¤º] n8n æœå‹™å°šæœªå•Ÿå‹•ï¼Œæ­£åœ¨å•Ÿå‹•æœå‹™...
     call :start_and_check_service
 )
 
 :: ==================================================================
-:: 3. ¤¬°Ê¦¡±±¨î¡]¥D¿ï³æ¡A¿é¤J«á»İ«ö Enter¡^
+:: 3. äº’å‹•å¼æ§åˆ¶ï¼ˆä¸»é¸å–®ï¼Œè¼¸å…¥å¾Œéœ€æŒ‰ Enterï¼‰
 :: ==================================================================
 :MAIN_MENU
 cls
-echo ¢z¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢{
-echo ¢x        n8n ¥»¦aªA°È ºŞ²z¤u¨ã      ¢x
-echo ¢u¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢t
-echo ¢x 1. ±Ò°ÊªA°È                       ¢x
-echo ¢x 2. Ãö³¬ªA°È                       ¢x
-echo ¢x 3. ¦w¸Ë«ü©wª©¥»                   ¢x
-echo ¢x 4. ­«·s¦w¸Ë                       ¢x
-echo ¢x 5. ¤â°Ê³Æ¥÷                       ¢x
-echo ¢x 6. ÁÙ­ì³Æ¥÷                       ¢x
-echo ¢x 7. §ó·s¦Ü³Ì·sª©¥»                 ¢x
-echo ¢x 0. Â÷¶}                           ¢x
-echo ¢|¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢w¢}
-set /p "cmd=½Ğ¿é¤J¾Ş§@ [0-7]: "
+echo â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+echo â”‚        n8n æœ¬åœ°æœå‹™ ç®¡ç†å·¥å…·      â”‚
+echo â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+echo â”‚ 1. å•Ÿå‹•æœå‹™                       â”‚
+echo â”‚ 2. é—œé–‰æœå‹™                       â”‚
+echo â”‚ 3. å®‰è£æŒ‡å®šç‰ˆæœ¬                   â”‚
+echo â”‚ 4. é‡æ–°å®‰è£                       â”‚
+echo â”‚ 5. æ‰‹å‹•å‚™ä»½                       â”‚
+echo â”‚ 6. é‚„åŸå‚™ä»½                       â”‚
+echo â”‚ 7. æ›´æ–°è‡³æœ€æ–°ç‰ˆæœ¬                 â”‚
+echo â”‚ 0. é›¢é–‹                           â”‚
+echo â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+set /p "cmd=è«‹è¼¸å…¥æ“ä½œ [0-7]: "
 if not defined cmd goto MAIN_MENU
 
 if "%cmd%"=="1" (
@@ -110,7 +110,7 @@ if "%cmd%"=="1" (
     goto ACT_EXIT
 ) else (
     echo.
-    echo µL®Ä¿ï¶µ¡A½Ğ­«·s¿é¤J¨Ã«ö Enter¡K
+    echo ç„¡æ•ˆé¸é …ï¼Œè«‹é‡æ–°è¼¸å…¥ä¸¦æŒ‰ Enterâ€¦
     pause >nul
     goto MAIN_MENU
 )
@@ -118,36 +118,36 @@ if "%cmd%"=="1" (
 :ACT_ON
     call :start_and_check_service
     echo.
-    echo «ö¥ô·NÁäªğ¦^¥D¿ï³æ...
+    echo æŒ‰ä»»æ„éµè¿”å›ä¸»é¸å–®...
     pause >nul
     goto MAIN_MENU
 
 :ACT_OFF
-    echo [¾Ş§@] Ãö³¬ªA°È¤¤¡K
+    echo [æ“ä½œ] é—œé–‰æœå‹™ä¸­â€¦
     docker compose down
-    echo [§¹¦¨] ªA°È¤wÃö³¬¡C
+    echo [å®Œæˆ] æœå‹™å·²é—œé–‰ã€‚
     echo.
-    echo «ö¥ô·NÁäªğ¦^¥D¿ï³æ...
+    echo æŒ‰ä»»æ„éµè¿”å›ä¸»é¸å–®...
     pause >nul
     goto MAIN_MENU
 
 :ACT_UPDATE_LATEST
-    echo [¾Ş§@] §ó·sªA°È¡K
-    echo [¨BÆJ1] ©Ô¨ú³Ì·s¬M¹³¡K
+    echo [æ“ä½œ] æ›´æ–°æœå‹™â€¦
+    echo [æ­¥é©Ÿ1] æ‹‰å–æœ€æ–°æ˜ åƒâ€¦
     docker compose pull
-    echo [¨BÆJ2] °±¤îÂÂª©¥»ªA°È¡K
+    echo [æ­¥é©Ÿ2] åœæ­¢èˆŠç‰ˆæœ¬æœå‹™â€¦
     docker compose down
-    echo [¨BÆJ3] ±Ò°Ê·sª©¥»ªA°È¡K
+    echo [æ­¥é©Ÿ3] å•Ÿå‹•æ–°ç‰ˆæœ¬æœå‹™â€¦
     call :start_and_check_service
-    echo [§¹¦¨] §ó·s¨Ã­«±Ò¡C
+    echo [å®Œæˆ] æ›´æ–°ä¸¦é‡å•Ÿã€‚
     echo.
-    echo «ö¥ô·NÁäªğ¦^¥D¿ï³æ...
+    echo æŒ‰ä»»æ„éµè¿”å›ä¸»é¸å–®...
     pause >nul
     goto MAIN_MENU
 
 :ACT_REINSTALL
-    echo [Äµ§i] ­«·s¦w¸Ë±N§R°£©Ò¦³ n8n ¤u§@¬yµ{¡B¾ÌÃÒ©M¸ê®Æ®w¡I
-    set /p "yn=¬O§_­n¥ı³Æ¥÷¡H (Y/N)¡A¿é¤J«á½Ğ«ö Enter: "
+    echo [è­¦å‘Š] é‡æ–°å®‰è£å°‡åˆªé™¤æ‰€æœ‰ n8n å·¥ä½œæµç¨‹ã€æ†‘è­‰å’Œè³‡æ–™åº«ï¼
+    set /p "yn=æ˜¯å¦è¦å…ˆå‚™ä»½ï¼Ÿ (Y/N)ï¼Œè¼¸å…¥å¾Œè«‹æŒ‰ Enter: "
     set "yn=!yn:~0,1!"
     if /I "!yn!"=="Y" (
         call :do_backup
@@ -155,7 +155,7 @@ if "%cmd%"=="1" (
         set "BACKUP_PERFORMED=false"
     )
 
-    echo --- ¶}©l­«¸mÀô¹Ò ---
+    echo --- é–‹å§‹é‡ç½®ç’°å¢ƒ ---
     docker compose down
     docker volume rm n8n_basic_data n8n_basic_postgres_data --force >nul 2>&1
     if exist "docker-compose.yml" del "docker-compose.yml"
@@ -167,22 +167,22 @@ if "%cmd%"=="1" (
     )
 
     call :check_service_status
-    echo [§¹¦¨] ­«·s¦w¸Ë§¹¦¨¡C
+    echo [å®Œæˆ] é‡æ–°å®‰è£å®Œæˆã€‚
     echo.
-    echo «ö¥ô·NÁäªğ¦^¥D¿ï³æ...
+    echo æŒ‰ä»»æ„éµè¿”å›ä¸»é¸å–®...
     pause >nul
     goto MAIN_MENU
 
 :ACT_RESTORE
-    set /p "RESTORE_DIR=½Ğ¿é¤J³Æ¥÷¥Ø¿ı¦WºÙ (¦p backup_YYYYMMDD-HHMMSS)¡A¿é¤J«á½Ğ«ö Enter: "
+    set /p "RESTORE_DIR=è«‹è¼¸å…¥å‚™ä»½ç›®éŒ„åç¨± (å¦‚ backup_YYYYMMDD-HHMMSS)ï¼Œè¼¸å…¥å¾Œè«‹æŒ‰ Enter: "
     if not defined RESTORE_DIR (
-        echo ¥Ø¿ı¦WºÙ¤£¥i¬°ªÅ¡A½Ğ­«¸Õ¡C
+        echo ç›®éŒ„åç¨±ä¸å¯ç‚ºç©ºï¼Œè«‹é‡è©¦ã€‚
         pause >nul
         goto ACT_RESTORE
     )
     call :do_restore "%RESTORE_DIR%"
     echo.
-    echo «ö¥ô·NÁäªğ¦^¥D¿ï³æ...
+    echo æŒ‰ä»»æ„éµè¿”å›ä¸»é¸å–®...
     pause >nul
     goto MAIN_MENU
 
@@ -190,78 +190,78 @@ if "%cmd%"=="1" (
     call :do_backup
     if "%BACKUP_PERFORMED%"=="true" (
         echo.
-        echo [¸ê°T] ³Æ¥÷¸ô®|¡G%CD%\!BACKUP_DIR!
+        echo [è³‡è¨Š] å‚™ä»½è·¯å¾‘ï¼š%CD%\!BACKUP_DIR!
     )
     echo.
-    echo «ö¥ô·NÁäªğ¦^¥D¿ï³æ...
+    echo æŒ‰ä»»æ„éµè¿”å›ä¸»é¸å–®...
     pause >nul
     goto MAIN_MENU
 
 :ACT_UPDATE_VERSION
-    echo [¾Ş§@] «ü©wª©¥»§ó·sªA°È¡K
+    echo [æ“ä½œ] æŒ‡å®šç‰ˆæœ¬æ›´æ–°æœå‹™â€¦
     echo.
-    echo [´£¥Ü] ½Ğ¿é¤J»y¸q¤Æª©¥»¸¹¡]¯Â¼Æ¦r®æ¦¡¡A¦p 2.2.3, 1.123.9, 2.3.1¡^
+    echo [æç¤º] è«‹è¼¸å…¥èªç¾©åŒ–ç‰ˆæœ¬è™Ÿï¼ˆç´”æ•¸å­—æ ¼å¼ï¼Œå¦‚ 2.2.3, 1.123.9, 2.3.1ï¼‰
     :INPUT_VERSION
-    set /p "VERSION=½Ğ¿é¤Jª©¥»¸¹¡A¿é¤J«á½Ğ«ö Enter: "
+    set /p "VERSION=è«‹è¼¸å…¥ç‰ˆæœ¬è™Ÿï¼Œè¼¸å…¥å¾Œè«‹æŒ‰ Enter: "
     if not defined VERSION (
-        echo ª©¥»¸¹¤£¥i¬°ªÅ¡A½Ğ­«¸Õ¡C
+        echo ç‰ˆæœ¬è™Ÿä¸å¯ç‚ºç©ºï¼Œè«‹é‡è©¦ã€‚
         goto INPUT_VERSION
     )
     call :validate_version "%VERSION%"
     if %errorlevel% neq 0 (
-        echo [¿ù»~] ª©¥»¸¹®æ¦¡¤£¥¿½T¡I
-        echo [´£¥Ü] ½Ğ¿é¤J»y¸q¤Æª©¥»¸¹¡]¯Â¼Æ¦r®æ¦¡¡A¦p 2.2.3, 1.123.9¡^
+        echo [éŒ¯èª¤] ç‰ˆæœ¬è™Ÿæ ¼å¼ä¸æ­£ç¢ºï¼
+        echo [æç¤º] è«‹è¼¸å…¥èªç¾©åŒ–ç‰ˆæœ¬è™Ÿï¼ˆç´”æ•¸å­—æ ¼å¼ï¼Œå¦‚ 2.2.3, 1.123.9ï¼‰
         goto INPUT_VERSION
     )
-    echo [½T»{] ±N§ó·s¦Üª©¥»¡G%VERSION%
-    echo [¨BÆJ1] §ó·s docker-compose.yml ¤¤ªº¬M¹³¼ĞÅÒ¡K
+    echo [ç¢ºèª] å°‡æ›´æ–°è‡³ç‰ˆæœ¬ï¼š%VERSION%
+    echo [æ­¥é©Ÿ1] æ›´æ–° docker-compose.yml ä¸­çš„æ˜ åƒæ¨™ç±¤â€¦
     call :update_compose_image "%VERSION%"
     if %errorlevel% neq 0 (
-        echo [¿ù»~] §ó·s docker-compose.yml ¥¢±Ñ¡I
+        echo [éŒ¯èª¤] æ›´æ–° docker-compose.yml å¤±æ•—ï¼
         echo.
-        echo «ö¥ô·NÁäªğ¦^¥D¿ï³æ...
+        echo æŒ‰ä»»æ„éµè¿”å›ä¸»é¸å–®...
         pause >nul
         goto MAIN_MENU
     )
-    echo [¨BÆJ2] ©Ô¨ú«ü©wª©¥»¬M¹³¡K
+    echo [æ­¥é©Ÿ2] æ‹‰å–æŒ‡å®šç‰ˆæœ¬æ˜ åƒâ€¦
     docker compose pull
     if %errorlevel% neq 0 (
-        echo [¿ù»~] ©Ô¨ú¬M¹³¥¢±Ñ¡I½Ğ½T»{ª©¥»¸¹¬O§_¥¿½T¡C
+        echo [éŒ¯èª¤] æ‹‰å–æ˜ åƒå¤±æ•—ï¼è«‹ç¢ºèªç‰ˆæœ¬è™Ÿæ˜¯å¦æ­£ç¢ºã€‚
         echo.
-        echo «ö¥ô·NÁäªğ¦^¥D¿ï³æ...
+        echo æŒ‰ä»»æ„éµè¿”å›ä¸»é¸å–®...
         pause >nul
         goto MAIN_MENU
     )
-    echo [¨BÆJ3] °±¤îÂÂª©¥»ªA°È¡K
+    echo [æ­¥é©Ÿ3] åœæ­¢èˆŠç‰ˆæœ¬æœå‹™â€¦
     docker compose down
-    echo [¨BÆJ4] ±Ò°Ê·sª©¥»ªA°È¡K
+    echo [æ­¥é©Ÿ4] å•Ÿå‹•æ–°ç‰ˆæœ¬æœå‹™â€¦
     call :start_and_check_service
-    echo [§¹¦¨] ¤w§ó·s¦Üª©¥» %VERSION% ¨Ã­«±Ò¡C
+    echo [å®Œæˆ] å·²æ›´æ–°è‡³ç‰ˆæœ¬ %VERSION% ä¸¦é‡å•Ÿã€‚
     echo.
-    echo «ö¥ô·NÁäªğ¦^¥D¿ï³æ...
+    echo æŒ‰ä»»æ„éµè¿”å›ä¸»é¸å–®...
     pause >nul
     goto MAIN_MENU
 
 :ACT_EXIT
-    echo [¾Ş§@] µ{¦¡µ²§ô«e¡A¥ıÀË¬d¨ÃÃö³¬ªA°È¡]¦p¦³±Ò°Ê¡^...
+    echo [æ“ä½œ] ç¨‹å¼çµæŸå‰ï¼Œå…ˆæª¢æŸ¥ä¸¦é—œé–‰æœå‹™ï¼ˆå¦‚æœ‰å•Ÿå‹•ï¼‰...
     docker compose down >nul 2>&1
-    echo [§¹¦¨] ªA°È¤wÃö³¬¡I
-    echo [¾Ş§@] µ{¦¡µ²§ô¡C
+    echo [å®Œæˆ] æœå‹™å·²é—œé–‰ï¼
+    echo [æ“ä½œ] ç¨‹å¼çµæŸã€‚
     goto END
 
 :: ==================================================================
-:: 4. ¤lµ{§Ç°Ï
+:: 4. å­ç¨‹åºå€
 :: ==================================================================
 
 :start_and_check_service
     echo.
-    echo [¾Ş§@] ±Ò°Ê n8n ªA°È¡K
+    echo [æ“ä½œ] å•Ÿå‹• n8n æœå‹™â€¦
     
-    :: ÀË¬dªA°È¬O§_¤w¦b¹B¦æ
+    :: æª¢æŸ¥æœå‹™æ˜¯å¦å·²åœ¨é‹è¡Œ
     curl -s --fail http://localhost:5678 >nul 2>&1
     if %errorlevel% equ 0 (
-        echo [´£¥Ü] n8n ªA°È¤w¦b¹B¦æ¤¤¡AµL»İ­«½Æ±Ò°Ê¡C
-        echo [´£¥Ü] ±z¥i¥Hª½±µ³X°İ¡Ghttp://localhost:5678
+        echo [æç¤º] n8n æœå‹™å·²åœ¨é‹è¡Œä¸­ï¼Œç„¡éœ€é‡è¤‡å•Ÿå‹•ã€‚
+        echo [æç¤º] æ‚¨å¯ä»¥ç›´æ¥è¨ªå•ï¼šhttp://localhost:5678
         exit /b
     )
     
@@ -271,19 +271,19 @@ if "%cmd%"=="1" (
 
 :check_service_status
     echo.
-    echo [ÀË¬d] ½ü¸ß n8n ªA°Èª¬ºA (³Ì¦h60¬í)¡K
+    echo [æª¢æŸ¥] è¼ªè©¢ n8n æœå‹™ç‹€æ…‹ (æœ€å¤š60ç§’)â€¦
     set "MAX_ATTEMPTS=20"
     set "ATTEMPT=0"
     :wait_service
     set /a ATTEMPT+=1
     curl -s --fail http://localhost:5678 >nul 2>&1
     if %errorlevel% equ 0 (
-        echo [¦¨¥\] n8n ¤w´Nºü¡I¥¿¦b¶}±ÒÂsÄı¾¹¡K
+        echo [æˆåŠŸ] n8n å·²å°±ç·’ï¼æ­£åœ¨é–‹å•Ÿç€è¦½å™¨â€¦
         start http://localhost:5678
         exit /b
     )
     if !ATTEMPT! GEQ !MAX_ATTEMPTS! (
-        echo [Äµ§i] °»´ú¶W®É¡A½Ğ¤â°ÊÀË¬d http://localhost:5678
+        echo [è­¦å‘Š] åµæ¸¬è¶…æ™‚ï¼Œè«‹æ‰‹å‹•æª¢æŸ¥ http://localhost:5678
         exit /b
     )
     timeout /t 3 >nul
@@ -291,7 +291,7 @@ if "%cmd%"=="1" (
 
 :create_compose_if_needed
     if not exist "docker-compose.yml" (
-        echo [ÀË¬d] ¥¼§ä¨ì docker-compose.yml¡A¥¿¦b«Ø¥ß...
+        echo [æª¢æŸ¥] æœªæ‰¾åˆ° docker-compose.ymlï¼Œæ­£åœ¨å»ºç«‹...
         (
         echo # n8n local docker - enhanced basic version
         echo services:
@@ -353,76 +353,76 @@ if "%cmd%"=="1" (
     exit /b
 
 :recover_backup
-    echo --- ¶}©lÁÙ­ì³Æ¥÷ ---
+    echo --- é–‹å§‹é‚„åŸå‚™ä»½ ---
     docker compose stop >nul
     docker run --rm -v n8n_basic_data:/data -v "%CD%\!BACKUP_DIR!:/backup" alpine ^
         sh -c "tar xzf /backup/n8n_data.tar.gz -C /data" >nul
     docker run --rm -v n8n_basic_postgres_data:/data -v "%CD%\!BACKUP_DIR!:/backup" alpine ^
         sh -c "tar xzf /backup/n8n_postgres_data.tar.gz -C /data" >nul
     docker compose start >nul
-    echo [§¹¦¨] ÁÙ­ì§¹¦¨¡C
+    echo [å®Œæˆ] é‚„åŸå®Œæˆã€‚
     exit /b
 
 :do_backup
-    echo [¾Ş§@] ¶}©l³Æ¥÷...
+    echo [æ“ä½œ] é–‹å§‹å‚™ä»½...
     docker volume inspect n8n_basic_data >nul 2>&1
     if %ERRORLEVEL% NEQ 0 (
-        echo [´£¥Ü] §ä¤£¨ì¸ê®Æ¨÷¡A±N¥H¥ş·s¦w¸Ë¤è¦¡Ä~Äò¡C
+        echo [æç¤º] æ‰¾ä¸åˆ°è³‡æ–™å·ï¼Œå°‡ä»¥å…¨æ–°å®‰è£æ–¹å¼ç¹¼çºŒã€‚
         set "BACKUP_PERFORMED=false"
         exit /b
     )
-    echo [¾Ş§@] ¥¿¦b©Ô¨ú³Æ¥÷¤u¨ã (alpine)...
+    echo [æ“ä½œ] æ­£åœ¨æ‹‰å–å‚™ä»½å·¥å…· (alpine)...
     docker pull alpine >nul
     for /f "tokens=2 delims==" %%I in ('wmic os get localdatetime /format:list') do set "dt=%%I"
     set "TIMESTAMP=!dt:~0,4!!dt:~4,2!!dt:~6,2!-!dt:~8,2!!dt:~10,2!!dt:~12,2!"
     set "BACKUP_DIR=backup_!TIMESTAMP!"
     mkdir "!BACKUP_DIR!"
-    echo [¾Ş§@] ³Æ¥÷ n8n ¸ê®Æ¨÷¡K
+    echo [æ“ä½œ] å‚™ä»½ n8n è³‡æ–™å·â€¦
     docker run --rm -v n8n_basic_data:/data -v "%CD%\!BACKUP_DIR!:/backup" alpine ^
         tar czf /backup/n8n_data.tar.gz -C /data . >nul
-    echo [¾Ş§@] ³Æ¥÷ PostgreSQL ¸ê®Æ¨÷¡K
+    echo [æ“ä½œ] å‚™ä»½ PostgreSQL è³‡æ–™å·â€¦
     docker run --rm -v n8n_basic_postgres_data:/data -v "%CD%\!BACKUP_DIR!:/backup" alpine ^
         tar czf /backup/n8n_postgres_data.tar.gz -C /data . >nul
-    echo [§¹¦¨] ³Æ¥÷§¹¦¨¡G!BACKUP_DIR!
-    echo [¸ê°T] ³Æ¥÷¸ô®|¡G%CD%\!BACKUP_DIR!
+    echo [å®Œæˆ] å‚™ä»½å®Œæˆï¼š!BACKUP_DIR!
+    echo [è³‡è¨Š] å‚™ä»½è·¯å¾‘ï¼š%CD%\!BACKUP_DIR!
     set "BACKUP_PERFORMED=true"
     exit /b
 
 :do_restore
     set "RESTORE_DIR=%~1"
-    echo --- ¶}©lÁÙ­ì³Æ¥÷¸ê®Æ¡G %RESTORE_DIR% ---
+    echo --- é–‹å§‹é‚„åŸå‚™ä»½è³‡æ–™ï¼š %RESTORE_DIR% ---
     docker compose down
     docker volume create n8n_basic_data >nul 2>&1
     docker volume create n8n_basic_postgres_data >nul 2>&1
-    echo ¥¿¦bÁÙ­ì n8n ¤u§@¬yµ{»P³]©w...
+    echo æ­£åœ¨é‚„åŸ n8n å·¥ä½œæµç¨‹èˆ‡è¨­å®š...
     docker run --rm -v n8n_basic_data:/data -v "%CD%\%RESTORE_DIR%:/backup" alpine ^
         sh -c "tar xzf /backup/n8n_data.tar.gz -C /data"
-    echo ¥¿¦bÁÙ­ì PostgreSQL ¸ê®Æ®w...
+    echo æ­£åœ¨é‚„åŸ PostgreSQL è³‡æ–™åº«...
     docker run --rm -v n8n_basic_postgres_data:/data -v "%CD%\%RESTORE_DIR%:/backup" alpine ^
         sh -c "tar xzf /backup/n8n_postgres_data.tar.gz -C /data"
-    echo [§¹¦¨] ÁÙ­ì§¹¦¨¡C
+    echo [å®Œæˆ] é‚„åŸå®Œæˆã€‚
     docker compose up -d
     call :check_service_status
     exit /b
 
 :validate_version
     set "VERSION=%~1"
-    :: ¨Ï¥Î PowerShell ÅçÃÒ»y¸q¤Æª©¥»¸¹®æ¦¡¡]¯Â¼Æ¦r¡G¥D.¦¸.­×­q¡^
+    :: ä½¿ç”¨ PowerShell é©—è­‰èªç¾©åŒ–ç‰ˆæœ¬è™Ÿæ ¼å¼ï¼ˆç´”æ•¸å­—ï¼šä¸».æ¬¡.ä¿®è¨‚ï¼‰
     powershell -NoProfile -Command "if ('%VERSION%' -match '^\d+\.\d+\.\d+$') { exit 0 } else { exit 1 }" >nul 2>&1
     if %errorlevel% equ 0 exit /b 0
-    :: ®æ¦¡¤£²Å¦X
+    :: æ ¼å¼ä¸ç¬¦åˆ
     exit /b 1
 
 :update_compose_image
     set "VERSION=%~1"
     if not exist "docker-compose.yml" (
-        echo [¿ù»~] §ä¤£¨ì docker-compose.yml ÀÉ®×¡I
+        echo [éŒ¯èª¤] æ‰¾ä¸åˆ° docker-compose.yml æª”æ¡ˆï¼
         exit /b 1
     )
-    :: ¨Ï¥Î PowerShell ¨Ó´À´«¬M¹³¼ĞÅÒ¡]«O¯dÀÉ®×®æ¦¡¡^
+    :: ä½¿ç”¨ PowerShell ä¾†æ›¿æ›æ˜ åƒæ¨™ç±¤ï¼ˆä¿ç•™æª”æ¡ˆæ ¼å¼ï¼‰
     powershell -NoProfile -Command "$version = '%VERSION%'; $lines = Get-Content 'docker-compose.yml'; $newLines = $lines | ForEach-Object { if ($_ -match '^\s+image:\s+n8nio/n8n:') { $_ -replace 'n8nio/n8n:[^\s]+', ('n8nio/n8n:' + $version) } else { $_ } }; $newLines | Set-Content 'docker-compose.yml'"
     if %errorlevel% neq 0 (
-        echo [¿ù»~] µLªk§ó·s docker-compose.yml¡I
+        echo [éŒ¯èª¤] ç„¡æ³•æ›´æ–° docker-compose.ymlï¼
         exit /b 1
     )
     exit /b 0
