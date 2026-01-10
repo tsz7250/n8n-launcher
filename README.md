@@ -1,6 +1,6 @@
 # n8n-launcher
 
-一個用於 Windows 系統的 n8n Docker 容器管理工具，提供簡單易用的圖形化選單介面來管理 n8n 工作流程自動化平台。
+一個跨平台的 n8n Docker 容器管理工具，支援 **Windows** 和 **macOS** 系統，提供簡單易用的選單介面來管理 n8n 工作流程自動化平台。
 
 ## 實際界面
 ![image](./pic/launcher.png)
@@ -16,13 +16,33 @@
 
 ## 系統需求
 
+### Windows 版本
 - Windows 10/11
 - Docker Desktop（腳本會自動檢查並提示安裝）
 - 網路連線（用於下載 Docker 映像檔）
 
+### Mac 版本
+- macOS 10.15 或更新版本
+- Docker Desktop（腳本會自動檢查並提示安裝）
+- 網路連線（用於下載 Docker 映像檔）
+- 自動支援 Intel 和 Apple Silicon (M1/M2/M3) 晶片
+
 ## 安裝與使用
 
-下載並打開 `n8n.bat` 即可開始使用。
+### Windows
+下載並雙擊打開 `n8n.bat` 即可開始使用。
+
+### Mac
+1. 下載 `n8n.sh`
+2. 開啟終端機（Terminal）
+3. 給予執行權限：
+   ```bash
+   chmod +x n8n.sh
+   ```
+4. 執行腳本：
+   ```bash
+   ./n8n.sh
+   ```
 
 ### 功能說明
 
@@ -63,8 +83,11 @@
 
 ## 預設配置
 
-腳本會在工作目錄 `%USERPROFILE%\n8n` 中建立以下配置：
+腳本會在工作目錄中建立以下配置：
 
+- **工作目錄**：
+  - Windows：`%USERPROFILE%\n8n`
+  - Mac：`$HOME/n8n`
 - **n8n 服務**：`http://localhost:5678`
 - **PostgreSQL 資料庫**：`localhost:5432`
 - **預設帳號**：`admin` / `adminpass`
@@ -74,6 +97,7 @@
 
 ## 工作目錄結構
 
+### Windows
 ```
 %USERPROFILE%\n8n\
 ├── docker-compose.yml      # Docker Compose 配置檔
@@ -82,25 +106,61 @@
     └── n8n_postgres_data.tar.gz
 ```
 
+### Mac
+```
+~/n8n/
+├── docker-compose.yml      # Docker Compose 配置檔
+└── backup_YYYYMMDD-HHMMSS/ # 備份資料夾
+    ├── n8n_data.tar.gz
+    └── n8n_postgres_data.tar.gz
+```
+
 ## 常見問題
 
-### Q: Docker Desktop 無法啟動怎麼辦？
+### Windows 相關
+
+#### Q: Docker Desktop 無法啟動怎麼辦？
 A: 請確認：
 - Docker Desktop 已正確安裝
 - 系統已啟用虛擬化功能（Hyper-V 或 WSL2）
 - 以系統管理員權限執行
 
-### Q: 服務啟動後無法訪問？
+#### Q: 如何修改預設配置？
+A: 可以編輯 `%USERPROFILE%\n8n\docker-compose.yml` 檔案，或修改 `n8n.bat` 中的環境變數設定。
+
+#### Q: 備份檔案儲存在哪裡？
+A: 備份檔案儲存在工作目錄（`%USERPROFILE%\n8n`）下的 `backup_YYYYMMDD-HHMMSS` 資料夾中。
+
+### Mac 相關
+
+#### Q: 終端顯示 "Permission denied" 錯誤？
+A: 請先給予腳本執行權限：
+```bash
+chmod +x n8n.sh
+```
+
+#### Q: 終端顯示彩色代碼而不是彩色文字？
+A: 請確認使用的是 bash shell。可以在腳本開頭加上 `#!/bin/bash` 確保使用正確的 shell。
+
+#### Q: 如何修改預設配置？
+A: 可以編輯 `~/n8n/docker-compose.yml` 檔案，或修改 `n8n.sh` 中的環境變數設定。
+
+#### Q: 備份檔案儲存在哪裡？
+A: 備份檔案儲存在工作目錄（`~/n8n`）下的 `backup_YYYYMMDD-HHMMSS` 資料夾中。
+
+#### Q: Apple Silicon (M1/M2/M3) 可以使用嗎？
+A: 完全支援！腳本會自動檢測晶片架構並下載對應版本的 Docker Desktop。
+
+### 通用問題
+
+#### Q: 服務啟動後無法訪問？
 A: 請檢查：
 - Docker Desktop 是否正在運行
 - 埠號 5678 是否被其他程式佔用
 - 防火牆設定是否允許存取
 
-### Q: 如何修改預設配置？
-A: 可以編輯 `%USERPROFILE%\n8n\docker-compose.yml` 檔案，或修改 `n8n.bat` 中的環境變數設定。
-
-### Q: 備份檔案儲存在哪裡？
-A: 備份檔案儲存在工作目錄（`%USERPROFILE%\n8n`）下的 `backup_YYYYMMDD-HHMMSS` 資料夾中。
+#### Q: 兩個系統的配置檔案相容嗎？
+A: 是的！`docker-compose.yml` 在 Windows 和 Mac 上完全相同，可以直接複製使用。
 
 ## 授權
 
