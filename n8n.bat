@@ -323,10 +323,10 @@ if "%cmd%"=="1" (
         echo.      - DB_POSTGRESDB_PORT=${POSTGRES_PORT:-5432}
         echo.      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB:-n8n}
         echo.      - DB_POSTGRESDB_USER=${POSTGRES_USER:-n8n}
-        echo.      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD:-n8npass}
+        echo.      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
         echo.      - N8N_BASIC_AUTH_ACTIVE=true
         echo.      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-admin}
-        echo.      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD:-adminpass}
+        echo.      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
         echo.      - N8N_RUNNERS_ENABLED=true
         echo.      - N8N_HOST=${N8N_HOST:-localhost}
         echo.      - N8N_PORT=${N8N_PORT:-5678}
