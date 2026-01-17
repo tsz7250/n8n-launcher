@@ -1,6 +1,6 @@
 # n8n-launcher
 
-一個用於 Windows 系統的 n8n Docker 容器管理工具，提供簡單易用的圖形化選單介面來管理 n8n 工作流程自動化平台。
+一個跨平台的 n8n Docker 容器管理工具，支援 **Windows** 和 **macOS** 系統，提供簡單易用的選單介面來管理 n8n 工作流程自動化平台。
 
 ## 實際界面
 ![image](./pic/launcher.png)
@@ -16,19 +16,37 @@
 
 ## 系統需求
 
+<details>
+<summary>Windows 版本</summary>
+
 - Windows 10/11
 - Docker Desktop（腳本會自動檢查並提示安裝）
 - 網路連線（用於下載 Docker 映像檔）
+
+</details>
+
+<details>
+<summary>Mac 版本</summary>
+
+- macOS 10.15 或更新版本
+- Docker Desktop（腳本會自動檢查並提示安裝）
+- 網路連線（用於下載 Docker 映像檔）
+- 自動支援 Intel 和 Apple Silicon (M1/M2/M3) 晶片
+
+</details>
 
 ## 安裝與使用
 
 ### 首次使用前：設定環境變數
 
-首次使用前，您需要設定以下必要的環境變數：
+首次使用前，您需要設定以下必要的環境變數。建議在工作目錄中建立 `.env` 檔案：
 
-#### 方法 1：使用 .env 檔案（推薦）
+<details>
+<summary>Windows 安裝步驟</summary>
 
-在工作目錄 `%USERPROFILE%\n8n` 中建立 `.env` 檔案，內容如下：
+#### Windows 工作目錄：`%USERPROFILE%\n8n`
+
+在對應的工作目錄中建立 `.env` 檔案，內容如下：
 
 ```env
 # PostgreSQL 資料庫密碼（必填）
@@ -70,9 +88,55 @@ set N8N_ENCRYPTION_KEY=your_32_character_encryption_key_here
 
 > ⚠️ **注意**：此方法設定的環境變數僅在當前命令提示字元視窗有效。
 
-### 開始使用
+#### 開始使用
 
-設定好環境變數後，下載並打開 `n8n.bat` 即可開始使用。
+設定好環境變數後，下載並雙擊打開 `n8n.bat` 即可開始使用。
+
+</details>
+
+<details>
+<summary>Mac 安裝步驟</summary>
+
+#### Mac 工作目錄：`$HOME/n8n`
+
+在對應的工作目錄中建立 `.env` 檔案，內容如下：
+
+```env
+# PostgreSQL 資料庫密碼（必填）
+POSTGRES_PASSWORD=your_strong_database_password
+
+# n8n 加密金鑰（必填，建議至少 32 字元）
+N8N_ENCRYPTION_KEY=your_32_character_encryption_key_here
+
+# 可選：PostgreSQL 使用者名稱（預設：n8n）
+# POSTGRES_USER=n8n
+
+# 可選：PostgreSQL 資料庫名稱（預設：n8n）
+# POSTGRES_DB=n8n
+
+# 可選：PostgreSQL 連接埠（預設：5432）
+# POSTGRES_PORT=5432
+
+# 可選：n8n 連接埠（預設：5678）
+# N8N_PORT=5678
+```
+
+> 💡 **提示**：Docker Compose 會自動讀取 `.env` 檔案中的環境變數。
+
+#### 開始使用
+
+1. 下載 `n8n.sh`
+2. 開啟終端機（Terminal）
+3. 給予執行權限：
+   ```bash
+   chmod +x n8n.sh
+   ```
+4. 執行腳本：
+   ```bash
+   ./n8n.sh
+   ```
+
+</details>
 
 ### 功能說明
 
@@ -113,8 +177,11 @@ set N8N_ENCRYPTION_KEY=your_32_character_encryption_key_here
 
 ## 預設配置
 
-腳本會在工作目錄 `%USERPROFILE%\n8n` 中建立以下配置：
+腳本會在工作目錄中建立以下配置：
 
+- **工作目錄**：
+  - Windows：`%USERPROFILE%\n8n`
+  - Mac：`$HOME/n8n`
 - **n8n 服務**：`http://localhost:5678`
 - **PostgreSQL 資料庫**：`localhost:5432`（預設埠號）
 - **使用者管理**：首次啟動時需註冊 Owner 帳號
@@ -123,6 +190,9 @@ set N8N_ENCRYPTION_KEY=your_32_character_encryption_key_here
 > 🔒 **安全提醒**：請務必設定強密碼的環境變數。
 
 ## 工作目錄結構
+
+<details>
+<summary>Windows 工作目錄結構</summary>
 
 ```
 %USERPROFILE%\n8n\
@@ -133,30 +203,82 @@ set N8N_ENCRYPTION_KEY=your_32_character_encryption_key_here
     └── n8n_postgres_data.tar.gz
 ```
 
+</details>
+
+<details>
+<summary>Mac 工作目錄結構</summary>
+
+```
+~/n8n/
+├── .env                    # 環境變數設定檔（需自行建立）
+├── docker-compose.yml      # Docker Compose 配置檔（自動生成）
+└── backup_YYYYMMDD-HHMMSS/ # 備份資料夾
+    ├── n8n_data.tar.gz
+    └── n8n_postgres_data.tar.gz
+```
+
+</details>
+
 > 📝 **注意**：`.env` 檔案包含敏感資訊，請勿提交到版本控制系統。建議將 `.env` 加入 `.gitignore`。
 
 ## 常見問題
 
-### Q: Docker Desktop 無法啟動怎麼辦？
+<details>
+<summary>Windows 相關問題</summary>
+
+#### Q: Docker Desktop 無法啟動怎麼辦？
 A: 請確認：
 - Docker Desktop 已正確安裝
 - 系統已啟用虛擬化功能（Hyper-V 或 WSL2）
 - 以系統管理員權限執行
 
-### Q: 服務啟動後無法訪問？
-A: 請檢查：
-- Docker Desktop 是否正在運行
-- 埠號 5678 是否被其他程式佔用
-- 防火牆設定是否允許存取
-
-### Q: 如何修改預設配置？
+#### Q: 如何修改預設配置？
 A: 可以透過以下方式修改：
 - **環境變數**：編輯 `%USERPROFILE%\n8n\.env` 檔案（推薦）
 - **Docker Compose 配置**：編輯 `%USERPROFILE%\n8n\docker-compose.yml` 檔案
 - **系統環境變數**：在 Windows 系統環境變數中設定
 
-### Q: 備份檔案儲存在哪裡？
+#### Q: 備份檔案儲存在哪裡？
 A: 備份檔案儲存在工作目錄（`%USERPROFILE%\n8n`）下的 `backup_YYYYMMDD-HHMMSS` 資料夾中。
+
+</details>
+
+<details>
+<summary>Mac 相關問題</summary>
+
+#### Q: 終端顯示 "Permission denied" 錯誤？
+A: 請先給予腳本執行權限：
+```bash
+chmod +x n8n.sh
+```
+
+#### Q: 終端顯示彩色代碼而不是彩色文字？
+A: 請確認使用的是 bash shell。可以在腳本開頭加上 `#!/bin/bash` 確保使用正確的 shell。
+
+#### Q: 如何修改預設配置？
+A: 可以編輯 `~/n8n/docker-compose.yml` 檔案，或修改 `n8n.sh` 中的環境變數設定。
+
+#### Q: 備份檔案儲存在哪裡？
+A: 備份檔案儲存在工作目錄（`~/n8n`）下的 `backup_YYYYMMDD-HHMMSS` 資料夾中。
+
+#### Q: Apple Silicon (M1/M2/M3) 可以使用嗎？
+A: 完全支援！腳本會自動檢測晶片架構並下載對應版本的 Docker Desktop。
+
+</details>
+
+<details>
+<summary>通用問題</summary>
+
+#### Q: 服務啟動後無法訪問？
+A: 請檢查：
+- Docker Desktop 是否正在運行
+- 埠號 5678 是否被其他程式佔用
+- 防火牆設定是否允許存取
+
+#### Q: 兩個系統的配置檔案相容嗎？
+A: 是的！`docker-compose.yml` 在 Windows 和 Mac 上完全相同，可以直接複製使用。
+
+</details>
 
 ## 授權
 
