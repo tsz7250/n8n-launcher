@@ -302,7 +302,7 @@ if "%cmd%"=="1" (
         echo.      - "${POSTGRES_PORT:-5432}:5432"
         echo.    environment:
         echo.      POSTGRES_USER: ${POSTGRES_USER:-n8n}
-        echo.      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-n8npass}
+        echo.      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         echo.      POSTGRES_DB: ${POSTGRES_DB:-n8n}
         echo.    volumes:
         echo.      - n8n_postgres_data:/var/lib/postgresql/data
@@ -314,7 +314,7 @@ if "%cmd%"=="1" (
         echo.    ports:
         echo.      - "${N8N_PORT:-5678}:5678"
         echo.    environment:
-        echo.      - N8N_ENCRYPTION_KEY=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
+        echo.      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
         echo.      - N8N_SECURE_COOKIE=false
         echo.      - NODE_TLS_REJECT_UNAUTHORIZED=0
         echo.      - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
@@ -323,10 +323,7 @@ if "%cmd%"=="1" (
         echo.      - DB_POSTGRESDB_PORT=${POSTGRES_PORT:-5432}
         echo.      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB:-n8n}
         echo.      - DB_POSTGRESDB_USER=${POSTGRES_USER:-n8n}
-        echo.      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD:-n8npass}
-        echo.      - N8N_BASIC_AUTH_ACTIVE=true
-        echo.      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-admin}
-        echo.      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD:-adminpass}
+        echo.      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
         echo.      - N8N_RUNNERS_ENABLED=true
         echo.      - N8N_HOST=${N8N_HOST:-localhost}
         echo.      - N8N_PORT=${N8N_PORT:-5678}
