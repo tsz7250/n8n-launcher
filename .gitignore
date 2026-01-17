@@ -1,0 +1,17 @@
+# 環境變數文件（包含敏感信息）
+.env
+
+# macOS
+.DS_Store
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# 備份文件
+backup_*/
+
+# IDE
+.vscode/
+.idea/
